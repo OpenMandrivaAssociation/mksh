@@ -9,7 +9,8 @@ Source0: https://www.mirbsd.org/MirOS/dist/mir/mksh/%{name}-%{version}.cpio.gz
 Source1: https://www.mirbsd.org/TaC-mksh.txt
 Source2: https://www.mirbsd.org/pics/mksh.svg
 Source3: mkshrc
-BuildRoot: %{_tmppath}/%{name}-%{version}-root
+# For building docs
+BuildRequires: groff-base
 
 %description
 mksh is the MirBSD enhanced version of the Public Domain Korn shell (pdksh),
