@@ -1,5 +1,5 @@
 Name: mksh
-Version: R40d
+Version: R40f
 Release: 1
 Summary: A free Korn Shell implementation and successor to pdksh
 License: MirOS, BSD, ISC
@@ -24,7 +24,7 @@ can't, and is much faster and smaller.
 
 %prep
 rm -Rf %{name}
-gunzip -dc %{_sourcedir}/%{name}-%{version}.cpio.gz | cpio -idv
+gunzip -dc %SOURCE0 | cpio -idv
 cd %{name}
 # Packagers/vendors adding patches that make mksh deviate from the default
 # behavior should append a space plus a vendor-defined string so they can
@@ -40,12 +40,12 @@ sh Build.sh
 
 %install
 rm -Rf %{buildroot}
-cp %{_sourcedir}/TaC-mksh.txt .
+cp %SOURCE1 .
 cd %{name}
 install -D mksh %{buildroot}/bin/mksh
 install -D mksh.1 %{buildroot}%{_mandir}/man1/mksh.1
-install -D %{_sourcedir}/mksh.svg %{buildroot}%{_datadir}/pixmaps/mksh.svg
-install -D %{_sourcedir}/mkshrc %{buildroot}%{_sysconfdir}/mkshrc
+install -D %SOURCE2 %{buildroot}%{_datadir}/pixmaps/mksh.svg
+install -D %SOURCE3 %{buildroot}%{_sysconfdir}/mkshrc
 
 %post
 /usr/share/rpm-helper/add-shell %{name} $1 /bin/mksh
