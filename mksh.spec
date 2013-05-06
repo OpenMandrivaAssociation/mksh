@@ -1,11 +1,11 @@
 Name: mksh
-Version: R40f
+Version: R46
 Release: 1
 Summary: A free Korn Shell implementation and successor to pdksh
 License: MirOS, BSD, ISC
 Group: Shells
 URL: https://www.mirbsd.org/mksh.htm
-Source0: https://www.mirbsd.org/MirOS/dist/mir/mksh/%{name}-%{version}.cpio.gz
+Source0: https://www.mirbsd.org/MirOS/dist/mir/mksh/%{name}-%{version}.tgz
 Source1: https://www.mirbsd.org/TaC-mksh.txt
 Source2: https://www.mirbsd.org/pics/mksh.svg
 Source3: mkshrc
@@ -40,7 +40,6 @@ sh Build.sh
 ./test.sh
 
 %install
-rm -Rf %{buildroot}
 cp %SOURCE1 .
 cd %{name}
 install -D mksh %{buildroot}/bin/mksh
@@ -55,7 +54,6 @@ install -D %SOURCE3 %{buildroot}%{_sysconfdir}/mkshrc
 /usr/share/rpm-helper/del-shell %{name} $1 /bin/mksh
 
 %files
-%defattr(-,root,root)
 %doc %{name}/dot.mkshrc TaC-mksh.txt
 %config(noreplace) %{_sysconfdir}/mkshrc
 /bin/mksh
