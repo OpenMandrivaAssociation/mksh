@@ -1,5 +1,7 @@
+%define debug_package %{nil}
+
 Name: mksh
-Version: R46
+Version: R50e
 Release: 1
 Summary: A free Korn Shell implementation and successor to pdksh
 License: MirOS, BSD, ISC
@@ -24,24 +26,21 @@ ksh93 features, and most ksh88 features. mksh can do many things GNU bash
 can't, and is much faster and smaller.
 
 %prep
-rm -Rf %{name}
-gunzip -dc %SOURCE0 | cpio -idv
-cd %{name}
+%setup -qn %{name}
 # Packagers/vendors adding patches that make mksh deviate from the default
 # behavior should append a space plus a vendor-defined string so they can
 # be distinguished. 
 %define product %{product_vendor} %{product_version}
 sed -i '/^\t@(#)MIRBSD KSH/s/$/ %{product}/' check.t
 sed -i '/^#define MKSH_VERSION/s/"$/ %{product}"/' sh.h
+sed -i -e 's|-O2|%{optflags}|g' Build.sh
 
 %build
-cd %{name}
 sh Build.sh
 ./test.sh
 
 %install
 cp %SOURCE1 .
-cd %{name}
 install -D mksh %{buildroot}/bin/mksh
 install -D mksh.1 %{buildroot}%{_mandir}/man1/mksh.1
 install -D %SOURCE2 %{buildroot}%{_datadir}/pixmaps/mksh.svg
@@ -54,7 +53,7 @@ install -D %SOURCE3 %{buildroot}%{_sysconfdir}/mkshrc
 /usr/share/rpm-helper/del-shell %{name} $1 /bin/mksh
 
 %files
-%doc %{name}/dot.mkshrc TaC-mksh.txt
+%doc dot.mkshrc TaC-mksh.txt
 %config(noreplace) %{_sysconfdir}/mkshrc
 /bin/mksh
 %{_mandir}/man1/mksh.1*
