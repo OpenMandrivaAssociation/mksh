@@ -1,0 +1,10 @@
+[ -r $HOME/.shrc ] && . $HOME/.shrc
+FCEDIT="vim"
+PS1="$(if ((USER_ID)); then print \$; else print \#; fi) "
+case "$TERM" in
+rxvt*|xterm*)
+PS1=$'\1\r\1\e]0;'"$(whoami)@$(hostname):\${PWD/#\$HOME/~}"$'\a\1'"$PS1";;
+esac
+bind "^[n"="search-history-down"
+bind "^[p"="search-history-up"
+bind "^[w"="kill-region"
