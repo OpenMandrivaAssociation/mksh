@@ -11,6 +11,7 @@ Source0: https://www.mirbsd.org/MirOS/dist/mir/mksh/%{name}-%{version}.tgz
 Source1: https://www.mirbsd.org/TaC-mksh.txt
 Source2: https://www.mirbsd.org/pics/mksh.svg
 Source3: mkshrc
+Patch0: mksh-50e-no-tty-warning.patch
 # For building docs
 BuildRequires: groff-base
 
@@ -27,6 +28,7 @@ can't, and is much faster and smaller.
 
 %prep
 %setup -qn %{name}
+%apply_patches
 # Packagers/vendors adding patches that make mksh deviate from the default
 # behavior should append a space plus a vendor-defined string so they can
 # be distinguished. 
@@ -37,6 +39,8 @@ sed -i -e 's|-O2|%{optflags}|g' Build.sh
 
 %build
 sh Build.sh
+
+%check
 ./test.sh
 
 %install
