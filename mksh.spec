@@ -1,7 +1,7 @@
 %define debug_package %{nil}
 
 Name: mksh
-Version: R50e
+Version: R50f
 Release: 1
 Summary: A free Korn Shell implementation and successor to pdksh
 License: MirOS, BSD, ISC
@@ -38,7 +38,7 @@ sed -i '/^#define MKSH_VERSION/s/"$/ %{product}"/' sh.h
 sed -i -e 's|-O2|%{optflags}|g' Build.sh
 
 %build
-sh Build.sh
+CC="%{__cc}" sh Build.sh
 
 %check
 ./test.sh
