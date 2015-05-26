@@ -1,5 +1,8 @@
 %define debug_package %{nil}
 
+# Set with bin_sh to symlink mksh to /bin/sh
+%bcond_with bin_sh
+
 Name: mksh
 Version: R50f
 Release: 1
@@ -40,8 +43,10 @@ sed -i -e 's|-O2|%{optflags}|g' Build.sh
 %build
 CC="%{__cc}" sh Build.sh
 
+%if ! %{cross_compiling}
 %check
 ./test.sh
+%endif
 
 %install
 cp %SOURCE1 .
@@ -49,6 +54,9 @@ install -D mksh %{buildroot}/bin/mksh
 install -D mksh.1 %{buildroot}%{_mandir}/man1/mksh.1
 install -D %SOURCE2 %{buildroot}%{_datadir}/pixmaps/mksh.svg
 install -D %SOURCE3 %{buildroot}%{_sysconfdir}/mkshrc
+%if %{with bin_sh}
+ln -s mksh %{buildroot}/bin/sh
+%endif
 
 %post
 /usr/share/rpm-helper/add-shell %{name} $1 /bin/mksh
@@ -60,5 +68,8 @@ install -D %SOURCE3 %{buildroot}%{_sysconfdir}/mkshrc
 %doc dot.mkshrc TaC-mksh.txt
 %config(noreplace) %{_sysconfdir}/mkshrc
 /bin/mksh
+%if %{with bin_sh}
+/bin/sh
+%endif
 %{_mandir}/man1/mksh.1*
 %{_datadir}/pixmaps/mksh.svg
