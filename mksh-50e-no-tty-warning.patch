@@ -1,12 +1,12 @@
---- mksh/Build.sh.omv~	2015-04-07 14:12:57.938520518 +0200
-+++ mksh/Build.sh	2015-04-07 14:23:07.467210430 +0200
-@@ -769,6 +769,9 @@ Linux)
+--- mksh/Build.sh.omv~	2015-08-20 03:51:53.790554176 +0200
++++ mksh/Build.sh	2015-08-20 03:52:47.373708471 +0200
+@@ -770,6 +770,9 @@ Linux)
  	*) add_cppflags -D_GNU_SOURCE ;;
  	esac
  	add_cppflags -DSETUID_CAN_FAIL_WITH_EAGAIN
-+	# We don't have a controlling TTY in some chroot jails
-+	# and in ABF ontainers
++	# We don't have a controlling TTY in some chroot jails...
++	# ... and ABF containers, causing make check to fail
 +	add_cppflags -DMKSH_DISABLE_TTY_WARNING
- 	: ${HAVE_REVOKE=0}
+ 	: "${HAVE_REVOKE=0}"
  	;;
  LynxOS)
