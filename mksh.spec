@@ -4,7 +4,7 @@
 %bcond_with bin_sh
 
 Name: mksh
-Version: R51
+Version: R54
 Release: 1
 Summary: A free Korn Shell implementation and successor to pdksh
 License: MirOS, BSD, ISC
@@ -17,6 +17,7 @@ Source3: mkshrc
 Patch0: mksh-50e-no-tty-warning.patch
 # For building docs
 BuildRequires: groff-base
+Requires(post,postun): rpm-helper
 
 %description
 mksh is the MirBSD enhanced version of the Public Domain Korn shell (pdksh),
@@ -52,17 +53,17 @@ CC="%{__cc}" sh Build.sh
 cp %SOURCE1 .
 install -D mksh %{buildroot}/bin/mksh
 install -D mksh.1 %{buildroot}%{_mandir}/man1/mksh.1
-install -D %SOURCE2 %{buildroot}%{_datadir}/pixmaps/mksh.svg
-install -D %SOURCE3 %{buildroot}%{_sysconfdir}/mkshrc
+install -D %{SOURCE2} %{buildroot}%{_datadir}/pixmaps/mksh.svg
+install -D %{SOURCE3} %{buildroot}%{_sysconfdir}/mkshrc
 %if %{with bin_sh}
 ln -s mksh %{buildroot}/bin/sh
 %endif
 
 %post
-/usr/share/rpm-helper/add-shell %{name} $1 /bin/mksh
+%_add_shell_helper %{name} $1 /bin/mksh
 
 %postun
-/usr/share/rpm-helper/del-shell %{name} $1 /bin/mksh
+%_del_shell_helper %{name} $1 /bin/mksh
 
 %files
 %doc dot.mkshrc TaC-mksh.txt
