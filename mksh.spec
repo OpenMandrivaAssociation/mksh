@@ -5,7 +5,7 @@
 
 Name: mksh
 Version: R54
-Release: 2
+Release: 3
 Summary: A free Korn Shell implementation and successor to pdksh
 License: MirOS, BSD, ISC
 Group: Shells
@@ -14,6 +14,7 @@ Source0: https://www.mirbsd.org/MirOS/dist/mir/mksh/%{name}-%{version}.tgz
 Source1: https://www.mirbsd.org/TaC-mksh.txt
 Source2: https://www.mirbsd.org/pics/mksh.svg
 Source3: mkshrc
+Source4: dot-mkshrc
 Patch0: mksh-50e-no-tty-warning.patch
 # For building docs
 BuildRequires: groff-base
@@ -35,7 +36,7 @@ can't, and is much faster and smaller.
 %apply_patches
 # Packagers/vendors adding patches that make mksh deviate from the default
 # behavior should append a space plus a vendor-defined string so they can
-# be distinguished. 
+# be distinguished.
 %define product %{product_vendor} %{product_version}
 sed -i '/^\t@(#)MIRBSD KSH/s/$/ %{product}/' check.t
 sed -i '/^#define MKSH_VERSION/s/"$/ %{product}"/' sh.h
@@ -50,11 +51,13 @@ CC="%{__cc}" sh Build.sh
 %endif
 
 %install
-cp %SOURCE1 .
+cp %{SOURCE1} .
 install -D mksh %{buildroot}/bin/mksh
 install -D mksh.1 %{buildroot}%{_mandir}/man1/mksh.1
 install -D %{SOURCE2} %{buildroot}%{_datadir}/pixmaps/mksh.svg
-install -D %{SOURCE3} %{buildroot}%{_sysconfdir}/mkshrc
+install -D -m644 %{SOURCE3} %{buildroot}%{_sysconfdir}/mkshrc
+install -D -m644 %{SOURCE4} %{buildroot}%{_sysconfdir}/skel/.mkshrc
+
 %if %{with bin_sh}
 ln -s mksh %{buildroot}/bin/sh
 %endif
@@ -68,6 +71,7 @@ ln -s mksh %{buildroot}/bin/sh
 %files
 %doc dot.mkshrc TaC-mksh.txt
 %config(noreplace) %{_sysconfdir}/mkshrc
+%config(noreplace) %{_sysconfdir}/skel/.mkshrc
 /bin/mksh
 %if %{with bin_sh}
 /bin/sh
