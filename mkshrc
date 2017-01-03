@@ -8,9 +8,6 @@
 # /etc/profile.d/ to make custom changes to environment. This will
 # prevent need for merging in future updates.
 
-# source global definitions
-[ -s /etc/mkshrc ] && . /etc/mkshrc
-
 # set history
 HISTFILE=$HOME/.mksh_history
 
@@ -63,11 +60,3 @@ for i in /etc/profile.d/*.sh; do
     fi
 done
 unset i
-
-# source local definitions
-[ -r $HOME/.shrc ] && . $HOME/.shrc
-
-# Uncomment the following line if you don't like systemctl's auto-paging feature:
-# export SYSTEMD_PAGER=
-
-# User specific aliases and functions
