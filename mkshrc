@@ -1,10 +1,73 @@
-[ -r $HOME/.shrc ] && . $HOME/.shrc
+# /etc/mkshrc
+
+# System wide functions and aliases
+# Environment stuff goes in /etc/profile
+
+# It's NOT good idea to change this file unless you know what you
+# are doing. Much better way is to create custom.sh shell script in
+# /etc/profile.d/ to make custom changes to environment. This will
+# prevent need for merging in future updates.
+
+# source global definitions
+[ -s /etc/mkshrc ] && . /etc/mkshrc
+
+# set history
+HISTFILE=$HOME/.mksh_history
+
+# set default editor
 FCEDIT="vim"
-PS1="$(if ((USER_ID)); then print \$; else print \#; fi) "
+
+# set default command prompt
+PS1='[${LOGNAME-$USER}@${HOSTNAME} $(
+if [[ $PWD = "$HOME" ]]; then
+    echo "~"
+elif [[ $PWD = "/${PWD##*/}" ]]; then
+    print -r -- "$PWD"
+else
+    print -r -- "${PWD##*/}"
+fi)]'
+if (( USER_ID == 0 )); then
+    PS1+='# '
+else
+    PS1+='$ '
+fi
+
+# set up color prompt
+psclear=$'\e[0m'
+psreset=$'\017\e[10;0m'
+if [ "$TERM" = "linux" ]; then
+    psreset=$'\017\e[?0c\e[10;0m'
+fi
+color="32m"
+if (( USER_ID == 0 )); then
+    color="31m"
+fi
+pscolor=$'\e[1;'$color
+
+# enable color output
+#export PS1=$'\\['"$psreset$pscolor"$'\\]'"$PS1"$'\\['"$psreset"$'\\]'
+
 case "$TERM" in
 rxvt*|xterm*)
 PS1=$'\1\r\1\e]0;'"$(whoami)@$(hostname):\${PWD/#\$HOME/~}"$'\a\1'"$PS1";;
 esac
+
 bind "^[n"="search-history-down"
 bind "^[p"="search-history-up"
 bind "^[w"="kill-region"
+
+# load global profiles
+for i in /etc/profile.d/*.sh; do
+    if [ -r $i ]; then
+	. $i
+    fi
+done
+unset i
+
+# source local definitions
+[ -r $HOME/.shrc ] && . $HOME/.shrc
+
+# Uncomment the following line if you don't like systemctl's auto-paging feature:
+# export SYSTEMD_PAGER=
+
+# User specific aliases and functions
