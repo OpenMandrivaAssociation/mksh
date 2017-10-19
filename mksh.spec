@@ -4,7 +4,7 @@
 %bcond_with bin_sh
 
 Name: mksh
-Version: R55
+Version: R56
 Release: 1
 Summary: A free Korn Shell implementation and successor to pdksh
 License: MirOS, BSD, ISC
