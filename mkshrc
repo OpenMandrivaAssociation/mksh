@@ -32,7 +32,7 @@ fi
 # set up color prompt
 psclear=$'\e[0m'
 psreset=$'\017\e[10;0m'
-if [ "$TERM" = "linux" ]; then
+if [ "$TERM" = 'linux' ]; then
     psreset=$'\017\e[?0c\e[10;0m'
 fi
 color="32m"
