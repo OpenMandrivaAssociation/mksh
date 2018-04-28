@@ -15,10 +15,10 @@ HISTFILE=$HOME/.mksh_history
 FCEDIT="vim"
 
 # set default command prompt
-PS1='[${LOGNAME-$USER}@${HOSTNAME} $(
-if [[ $PWD = "$HOME" ]]; then
-    echo "~"
-elif [[ $PWD = "/${PWD##*/}" ]]; then
+PS1='[$(whoami)@${HOSTNAME} $(
+if [ "$PWD" = "$HOME" ]; then
+    printf '%s' "~"
+elif [ "$PWD" = "/${PWD##*/}" ]; then
     print -r -- "$PWD"
 else
     print -r -- "${PWD##*/}"
