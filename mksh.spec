@@ -5,7 +5,7 @@
 
 Name: mksh
 Version: R56c
-Release: 2
+Release: 3
 Summary: A free Korn Shell implementation and successor to pdksh
 License: MirOS, BSD, ISC
 Group: Shells
