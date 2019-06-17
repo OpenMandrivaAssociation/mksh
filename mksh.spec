@@ -4,8 +4,8 @@
 %bcond_with bin_sh
 
 Name: mksh
-Version: R56c
-Release: 3
+Version: R57
+Release: 1
 Summary: A free Korn Shell implementation and successor to pdksh
 License: MirOS, BSD, ISC
 Group: Shells
@@ -32,8 +32,8 @@ ksh93 features, and most ksh88 features. mksh can do many things GNU bash
 can't, and is much faster and smaller.
 
 %prep
-%setup -qn %{name}
-%apply_patches
+%autosetup -n %{name} -p1
+
 # Packagers/vendors adding patches that make mksh deviate from the default
 # behavior should append a space plus a vendor-defined string so they can
 # be distinguished.
@@ -45,7 +45,7 @@ sed -i -e 's|-O2|%{optflags}|g' Build.sh
 %build
 %setup_compile_flags
 
-CC="%{__cc}" sh Build.sh
+CC="%{__cc}" CFLAGS="%{optflags}" LDFLAGS="%{ldflags}" sh Build.sh -c lto
 
 %if ! %{cross_compiling}
 %check
