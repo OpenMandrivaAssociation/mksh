@@ -45,8 +45,7 @@ sed -i -e 's|-O2|%{optflags}|g' Build.sh
 %build
 %setup_compile_flags
 
-CC="%{__cc}" CFLAGS="%{optflags}" LDFLAGS="%{ldflags}" sh Build.sh -c lto
-
+CC="%{__cc}" CFLAGS="%{optflags}" LDFLAGS="%{ldflags}" sh Build.sh
 %if ! %{cross_compiling}
 %check
 ./test.sh
