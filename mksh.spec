@@ -46,10 +46,6 @@ sed -i -e 's|-O2|%{optflags}|g' Build.sh
 %setup_compile_flags
 
 CC="%{__cc}" CFLAGS="%{optflags}" LDFLAGS="%{ldflags}" sh Build.sh
-%if ! %{cross_compiling}
-%check
-./test.sh
-%endif
 
 %install
 cp %{SOURCE1} .
