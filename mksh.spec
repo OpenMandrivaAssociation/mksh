@@ -4,7 +4,7 @@
 %bcond_with bin_sh
 
 Name: mksh
-Version: R59
+Version: R59b
 Release: 1
 Summary: A free Korn Shell implementation and successor to pdksh
 License: MirOS, BSD, ISC
@@ -43,7 +43,7 @@ sed -i '/^#define MKSH_VERSION/s/"$/ %{product}"/' sh.h
 sed -i -e 's|-O2|%{optflags}|g' Build.sh
 
 %build
-%setup_compile_flags
+%set_build_flags
 
 CC="%{__cc}" CFLAGS="%{optflags}" LDFLAGS="%{ldflags}" sh Build.sh
 
