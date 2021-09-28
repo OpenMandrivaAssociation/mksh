@@ -1,11 +1,9 @@
-%define debug_package %{nil}
-
 # Set with bin_sh to symlink mksh to /bin/sh
 %bcond_with bin_sh
 
 Name: mksh
 Version: R59c
-Release: 1
+Release: 2
 Summary: A free Korn Shell implementation and successor to pdksh
 License: MirOS, BSD, ISC
 Group: Shells
