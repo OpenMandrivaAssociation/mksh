@@ -1,0 +1,19 @@
+diff -up mksh/var.c.omv~ mksh/var.c
+--- mksh/var.c.omv~	2022-01-11 19:51:22.652679607 +0100
++++ mksh/var.c	2022-01-11 19:55:48.937721432 +0100
+@@ -1413,9 +1413,15 @@ setspec(struct tbl *vp)
+ 		vp->flag &= ~SPECIAL;
+ 		if (getint(vp, &num, false) == -1) {
+ 			s = str_val(vp);
++			/* In bash, HISTSIZE may be set but blank - let's
++			 * keep launching mksh from bash working */
++			if (st == V_HISTSIZE && !*s) {
++				num.i = 2047;
++			} else {
+ 			if (st != V_RANDOM)
+ 				errorf(Tf_sD_sD_s, vp->name, Tbadnum, s);
+ 			num.u = hash(s);
++			}
+ 		}
+ 		vp->flag |= SPECIAL;
+ 		break;

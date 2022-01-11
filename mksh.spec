@@ -3,7 +3,7 @@
 
 Name: mksh
 Version: R59c
-Release: 2
+Release: 3
 Summary: A free Korn Shell implementation and successor to pdksh
 License: MirOS, BSD, ISC
 Group: Shells
@@ -14,6 +14,7 @@ Source2: https://www.mirbsd.org/pics/mksh.svg
 Source3: mkshrc
 Source4: dot-mkshrc
 Patch0: mksh-50e-no-tty-warning.patch
+Patch1: mksh-dont-barf-on-empty-HISTSIZE.patch
 # For building docs
 BuildRequires: groff-base
 Requires(post,postun): rpm-helper
