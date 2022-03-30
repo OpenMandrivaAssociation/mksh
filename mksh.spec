@@ -3,7 +3,7 @@
 
 Name: mksh
 Version: R59c
-Release: 3
+Release: 4
 Summary: A free Korn Shell implementation and successor to pdksh
 License: MirOS, BSD, ISC
 Group: Shells
@@ -17,7 +17,6 @@ Patch0: mksh-50e-no-tty-warning.patch
 Patch1: mksh-dont-barf-on-empty-HISTSIZE.patch
 # For building docs
 BuildRequires: groff-base
-Requires(post,postun): rpm-helper
 
 %description
 mksh is the MirBSD enhanced version of the Public Domain Korn shell (pdksh),
@@ -58,11 +57,42 @@ install -D -m644 %{SOURCE4} %{buildroot}%{_sysconfdir}/skel/.mkshrc
 ln -s mksh %{buildroot}/bin/sh
 %endif
 
-%post
-%_add_shell_helper %{name} $1 /bin/mksh
+# post is in lua so that we can run it without any external deps.  Helps
+# for bootstrapping a new install.
+# Jesse Keating 2009-01-29 (code from Ignacio Vazquez-Abrams)
+# Roman Rakus 2011-11-07 (code from Sergey Romanov) #740611
+%post -p <lua>
+nl = '\n'
+sh = '/bin/sh'..nl
+bash = '/bin/mksh'..nl
+f = io.open('/etc/shells', 'a+')
+if f then
+    local shells = nl..f:read('*all')..nl
+    if not shells:find(nl..sh) then f:write(sh) end
+    if not shells:find(nl..bash) then f:write(bash) end
+    f:close()
+end
 
-%postun
-%_del_shell_helper %{name} $1 /bin/mksh
+%postun -p <lua>
+-- Run it only if we are uninstalling
+if arg[2] == 0
+then
+    t={}
+    for line in io.lines("/etc/shells")
+    do
+	if line ~= "/bin/mksh" and line ~= "/bin/sh"
+	then
+	    table.insert(t,line)
+	end
+    end
+
+    f = io.open("/etc/shells", "w+")
+    for n,line in pairs(t)
+    do
+	f:write(line.."\n")
+    end
+    f:close()
+end
 
 %files
 %doc dot.mkshrc TaC-mksh.txt
@@ -72,5 +102,5 @@ ln -s mksh %{buildroot}/bin/sh
 %if %{with bin_sh}
 /bin/sh
 %endif
-%{_mandir}/man1/mksh.1*
+%doc %{_mandir}/man1/mksh.1*
 %{_datadir}/pixmaps/mksh.svg
