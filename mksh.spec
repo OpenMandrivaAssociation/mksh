@@ -1,22 +1,22 @@
 # Set with bin_sh to symlink mksh to /bin/sh
 %bcond_with bin_sh
 
-Name: mksh
-Version: R59c
-Release: 4
-Summary: A free Korn Shell implementation and successor to pdksh
-License: MirOS, BSD, ISC
-Group: Shells
-URL: https://www.mirbsd.org/mksh.htm
-Source0: https://www.mirbsd.org/MirOS/dist/mir/mksh/%{name}-%{version}.tgz
-Source1: https://www.mirbsd.org/TaC-mksh.txt
-Source2: https://www.mirbsd.org/pics/mksh.svg
-Source3: mkshrc
-Source4: dot-mkshrc
-Patch0: mksh-50e-no-tty-warning.patch
-Patch1: mksh-dont-barf-on-empty-HISTSIZE.patch
+Summary:	A free Korn Shell implementation and successor to pdksh
+Name:		mksh
+Version:	R59c
+Release:	5
+License:	MirOS, BSD, ISC
+Group:		Shells
+URL:		https://www.mirbsd.org/mksh.htm
+Source0:	https://www.mirbsd.org/MirOS/dist/mir/mksh/%{name}-%{version}.tgz
+Source1:	https://www.mirbsd.org/TaC-mksh.txt
+Source2:	https://www.mirbsd.org/pics/mksh.svg
+Source3:	mkshrc
+Source4:	dot-mkshrc
+Patch0:		mksh-50e-no-tty-warning.patch
+Patch1:		mksh-dont-barf-on-empty-HISTSIZE.patch
 # For building docs
-BuildRequires: groff-base
+BuildRequires:	groff-base
 
 %description
 mksh is the MirBSD enhanced version of the Public Domain Korn shell (pdksh),
@@ -43,18 +43,20 @@ sed -i -e 's|-O2|%{optflags}|g' Build.sh
 %build
 %set_build_flags
 
-CC="%{__cc}" CFLAGS="%{optflags}" LDFLAGS="%{ldflags}" sh Build.sh
+CC="%{__cc}" CFLAGS="%{optflags}" LDFLAGS="%{build_ldflags}" sh Build.sh
 
 %install
 cp %{SOURCE1} .
-install -D mksh %{buildroot}/bin/mksh
+install -D mksh %{buildroot}%{_bindir}/mksh
 install -D mksh.1 %{buildroot}%{_mandir}/man1/mksh.1
 install -D %{SOURCE2} %{buildroot}%{_datadir}/pixmaps/mksh.svg
 install -D -m644 %{SOURCE3} %{buildroot}%{_sysconfdir}/mkshrc
 install -D -m644 %{SOURCE4} %{buildroot}%{_sysconfdir}/skel/.mkshrc
 
 %if %{with bin_sh}
-ln -s mksh %{buildroot}/bin/sh
+mkdir -p %{buildroot}/bin
+ln -s %{_bindir}/mksh %{buildroot}/bin/sh
+ln -s %{_bindir}/mksh %{buildroot}%{_bindir}/sh
 %endif
 
 # post is in lua so that we can run it without any external deps.  Helps
@@ -64,7 +66,7 @@ ln -s mksh %{buildroot}/bin/sh
 %post -p <lua>
 nl = '\n'
 sh = '/bin/sh'..nl
-bash = '/bin/mksh'..nl
+bash = '/usr/bin/mksh'..nl
 f = io.open('/etc/shells', 'a+')
 if f then
     local shells = nl..f:read('*all')..nl
@@ -80,7 +82,7 @@ then
     t={}
     for line in io.lines("/etc/shells")
     do
-	if line ~= "/bin/mksh" and line ~= "/bin/sh"
+	if line ~= "/usr/bin/mksh" and line ~= "/bin/sh"
 	then
 	    table.insert(t,line)
 	end
@@ -98,9 +100,10 @@ end
 %doc dot.mkshrc TaC-mksh.txt
 %config(noreplace) %{_sysconfdir}/mkshrc
 %config(noreplace) %{_sysconfdir}/skel/.mkshrc
-/bin/mksh
+%{_bindir}/mksh
 %if %{with bin_sh}
 /bin/sh
+%{_bindir}/sh
 %endif
 %doc %{_mandir}/man1/mksh.1*
 %{_datadir}/pixmaps/mksh.svg
