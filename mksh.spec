@@ -4,7 +4,7 @@
 Summary:	A free Korn Shell implementation and successor to pdksh
 Name:		mksh
 Version:	R59c
-Release:	5
+Release:	6
 License:	MirOS, BSD, ISC
 Group:		Shells
 URL:		https://www.mirbsd.org/mksh.htm
